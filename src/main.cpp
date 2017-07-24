@@ -29,18 +29,9 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
     }
 }
 
-
-
-int main(int argc, char** argv )
+int annotate(string file_string)
 {
-    if ( argc != 2 )
-    {
-        printf("usage: ./face_annotation <Image_Path>\n");
-        return -1;
-    }
-
-
-    image = imread( argv[1], 1 );
+    image = imread( file_string, 1 );
     draw_image = image.clone();
     if ( !image.data )
     {
@@ -49,7 +40,7 @@ int main(int argc, char** argv )
     }
 
     //make .pts file
-    std::string file_string(argv[1]);
+    //std::string file_string(argv[1]);
     file_string.replace(file_string.find("jpg"), sizeof("pts")-1, "pts");
     cout << file_string <<endl;
     ofstream pts_file;
@@ -76,4 +67,51 @@ int main(int argc, char** argv )
     pts_file << "}"<<endl;
     pts_file.close();
     return 0;
+}
+
+int show(string file_string)
+{
+    image = imread( file_string, 1 );
+    if ( !image.data )
+    {
+        printf("No image data \n");
+        return -1;
+    }
+
+    file_string.replace(file_string.find("jpg"), sizeof("pts")-1, "pts");
+    cout << file_string <<endl;
+    ifstream pts_file;
+    pts_file.open(file_string.c_str());
+    string line;
+
+    while(getline(pts_file, line))
+    {
+        if(line.compare("{") == 0)
+        {
+            getline(pts_file, line);
+            cout << line <<endl;
+        }
+    }
+
+    return 0;
+}
+
+int main(int argc, char** argv )
+{
+    if ( argc != 3 )
+    {
+        printf("usage: ./face_annotation annotate <Image_Path> or ./face_annotation show <image path>\n");
+        return -1;
+    }
+
+    if (strcmp(argv[1], "annotate") == 0) {
+        std::string file_string(argv[2]);
+        return annotate(file_string);
+    }
+
+    if (strcmp(argv[1], "show") == 0) {
+        std::string file_string(argv[2]);
+        return show(file_string);
+    }
+    
 }
