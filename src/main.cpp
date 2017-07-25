@@ -88,10 +88,39 @@ int show(string file_string)
     {
         if(line.compare("{") == 0)
         {
-            getline(pts_file, line);
-            cout << line <<endl;
+            while(getline(pts_file, line) && line.compare("}") != 0)
+            {
+                cout << line <<endl;
+                string buf;
+                stringstream ss(line);
+                vector<string> coord;
+
+                while(ss >> buf)
+                    coord.push_back(buf);
+
+                int x = atoi(coord[0].c_str());
+                int y = atoi(coord[1].c_str());
+                landmark_vec.push_back(Point(x,y));
+            }
         }
     }
+
+    if(landmark_vec.size()!=41)
+    {
+        cout<<"Not exactly 41 points is clicked, nothing would be shown"<<endl;
+        return 0;
+    }
+
+     for(int i=0; i<g_landmark_n; i++)
+     {
+         int x = landmark_vec[i].x;
+         int y = landmark_vec[i].y;
+        circle(image, Point(x,y), 1, Scalar(0,255,0), -1);
+        //putText(image, std::to_string(click_count), Point(x,y), FONT_HERSHEY_PLAIN, 2,  Scalar(0,0,255,255));
+      
+     }
+    imshow("draw_image", image);
+     waitKey(0);
 
     return 0;
 }
