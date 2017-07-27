@@ -8,7 +8,7 @@ using namespace cv;
 using namespace std;
 
 //global number of landmarks
-int g_landmark_n = 41;
+int g_landmark_n = 20;
 Mat image,draw_image;
 int click_count=0;
 vector<Point> landmark_vec;
@@ -55,9 +55,9 @@ int annotate(string file_string)
     imshow("Display Image", image);
 
     waitKey(0);
-    if(landmark_vec.size()!=41)
+    if(landmark_vec.size()!=20)
     {
-        cout<<"Not exactly 41 points is clicked, wrong things will be save to .pts"<<endl;
+        cout<<"Not exactly 20 points is clicked, wrong things will be save to .pts"<<endl;
         return 0;
     }
     for(int i=0; i<g_landmark_n; i++)
@@ -105,9 +105,9 @@ int show(string file_string)
         }
     }
 
-    if(landmark_vec.size()!=41)
+    if(landmark_vec.size()!=20)
     {
-        cout<<"Not exactly 41 points is clicked, nothing would be shown"<<endl;
+        cout<<"Not exactly 20 points is clicked, nothing would be shown"<<endl;
         return 0;
     }
 
@@ -116,11 +116,13 @@ int show(string file_string)
          int x = landmark_vec[i].x;
          int y = landmark_vec[i].y;
         circle(image, Point(x,y), 1, Scalar(0,255,0), -1);
-        //putText(image, std::to_string(click_count), Point(x,y), FONT_HERSHEY_PLAIN, 2,  Scalar(0,0,255,255));
+        putText(image, std::to_string(i), Point(x,y), FONT_HERSHEY_PLAIN, 1,  Scalar(0,0,255,255));
       
      }
     imshow("draw_image", image);
      waitKey(0);
+
+    imwrite("sample.jpg", image);
 
     return 0;
 }
